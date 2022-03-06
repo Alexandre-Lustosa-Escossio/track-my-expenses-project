@@ -1,1 +1,6 @@
-// Coloque aqui suas actions
+export const userAction = (payload) => ({
+  type: 'saveLoginInfo',
+  payload,
+});
+
+export const walletAction = () => ({ type: 'wallet' });
