@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { walletAction } from '../actions';
+import apiFetcher from '../helpers/apiFetcher';
 
 class Wallet extends React.Component {
     state = {
@@ -10,6 +11,7 @@ class Wallet extends React.Component {
       methodInput: 'Dinheiro',
       tagInput: 'Alimentação',
       descriptionInput: '',
+      currencyList: [],
     }
 
   handleInputChange = (event) => {
@@ -28,9 +30,19 @@ handleBtnClick = () => {
   });
 }
 
+async componentDidMount() {
+  const apiResponse = await apiFetcher();
+  const indexOfUSDT = Object.keys(apiResponse).indexOf('USDT');
+  const currencyList = Object.keys(apiResponse);
+  currencyList.splice(indexOfUSDT, 1);
+  this.setState({
+    currencyList,
+  });
+}
+
 render() {
   const { email } = this.props;
-  const { valueInput, descriptionInput } = this.state;
+  const { valueInput, descriptionInput, currencyList } = this.state;
   return (
     <>
       <header>
@@ -65,8 +77,13 @@ render() {
             name="currencyInput"
             onChange={ (event) => this.handleInputChange(event) }
           >
-            <option>USD</option>
-            <option>BRL</option>
+            {currencyList.map((currency, index) => (
+              <option
+                key={ index }
+                data-testid={ currency }
+              >
+                {currency}
+              </option>))}
           </select>
         </label>
         <label htmlFor="method-input">
