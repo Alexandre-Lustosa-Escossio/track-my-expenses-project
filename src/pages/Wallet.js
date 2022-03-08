@@ -14,7 +14,11 @@ class Wallet extends React.Component {
       currencyList: [],
     }
 
-    async componentDidMount() {
+    componentDidMount() {
+      this.setCurrencyList();
+    }
+
+    async setCurrencyList() {
       const apiResponse = await apiFetcher();
       const indexOfUSDT = Object.keys(apiResponse).indexOf('USDT');
       const currencyList = Object.keys(apiResponse);
@@ -60,7 +64,7 @@ class Wallet extends React.Component {
               Cambio:BRL
             </span>
           </header>
-          <main>
+          <form>
             <label htmlFor="value-input">
               Valor
               <input
@@ -134,7 +138,67 @@ class Wallet extends React.Component {
             >
               Adicionar Despesa
             </button>
-          </main>
+          </form>
+          <table>
+            <tbody>
+              <tr>
+                <th>
+                  Descrição
+                </th>
+                <th>
+                  Tag
+                </th>
+                <th>
+                  Método de pagamento
+                </th>
+                <th>
+                  Valor
+                </th>
+                <th>
+                  Moeda
+                </th>
+                <th>
+                  Câmbio utilizado
+                </th>
+                <th>
+                  Valor convertido
+                </th>
+                <th>
+                  Moeda de conversão
+                </th>
+                <th>
+                  Editar/Excluir
+                </th>
+              </tr>
+              {expenses.map((expense) => {
+                const { description, tag, method,
+                  value, currency, exchangeRates } = expense;
+                const formattedValue = parseFloat(value).toFixed(2);
+                const exchangingQuotation = exchangeRates[currency].ask;
+                // Source: https://medium.com/swlh/how-to-round-to-a-certain-number-of-decimal-places-in-javascript-ed74c471c1b8
+                const formattedQuotation = Math.round(exchangingQuotation * 100) / 100;
+                const currentCurrency = exchangeRates[currency].name.split('/')[0];
+                const CONVERT_TO = 'Real';
+                const convertedValue = (value * exchangingQuotation).toString();
+                const separatorIndex = [...convertedValue].indexOf('.');
+                const THREE = 3;
+                const roundedValue = convertedValue.slice(0, separatorIndex + THREE);
+                return (
+                  <tr key={ expense.id }>
+                    <td>{description}</td>
+                    <td>{tag}</td>
+                    <td>{method}</td>
+                    <td>{formattedValue}</td>
+                    <td>{currentCurrency}</td>
+                    <td>{formattedQuotation}</td>
+                    <td>{roundedValue}</td>
+                    <td>{CONVERT_TO}</td>
+                    <td>x</td>
+                  </tr>);
+              })}
+            </tbody>
+          </table>
+
         </>
       );
     }
