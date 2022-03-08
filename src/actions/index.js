@@ -5,13 +5,13 @@ export const userAction = (payload) => ({
   payload,
 });
 
-const walletActionMaker = (payload) => ({
+const saveExpensesAction = (payload) => ({
   type: 'saveExpensesData',
   payload });
 
 const composePayload = (payload, apiResponse) => {
   payload = { ...payload, exchangeRates: apiResponse };
-  return walletActionMaker(payload);
+  return saveExpensesAction(payload);
 };
 
 export const walletAction = (payload) => (dispatch) => {
@@ -20,3 +20,8 @@ export const walletAction = (payload) => (dispatch) => {
       dispatch(composePayload(payload, res));
     });
 };
+
+export const deleteExpenseAction = (idToDelete) => ({
+  type: 'deleteExpense',
+  idToDelete,
+});

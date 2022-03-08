@@ -11,6 +11,16 @@ const wallet = (state = INITIAL_STATE, action) => {
       expenses: [...prevExpenses, { id: prevExpensesCount, ...action.payload }],
     });
   }
+
+  case 'deleteExpense': {
+    const { idToDelete } = action;
+    const prevExpenses = { ...state }.expenses;
+    const newExpenses = prevExpenses.filter((expense) => expense.id !== idToDelete);
+    return ({
+      expenses: [...newExpenses],
+    });
+  }
+
   default:
     return state;
   }

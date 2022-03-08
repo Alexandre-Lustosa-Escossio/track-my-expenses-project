@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { walletAction } from '../actions';
+import { deleteExpenseAction, walletAction } from '../actions';
 import apiFetcher from '../helpers/apiFetcher';
 
 class Wallet extends React.Component {
@@ -44,6 +44,11 @@ class Wallet extends React.Component {
         value: '',
         description: '',
       });
+    }
+
+    handleDeleteExpenseBtn = (idToDelete) => {
+      const { deleteExpense } = this.props;
+      deleteExpense(idToDelete);
     }
 
     render() {
@@ -170,32 +175,6 @@ class Wallet extends React.Component {
                   Editar/Excluir
                 </th>
               </tr>
-              {expenses.map((expense) => {
-                const { description, tag, method,
-                  value, currency, exchangeRates } = expense;
-                const formattedValue = parseFloat(value).toFixed(2);
-                const exchangingQuotation = exchangeRates[currency].ask;
-                // Source: https://medium.com/swlh/how-to-round-to-a-certain-number-of-decimal-places-in-javascript-ed74c471c1b8
-                const formattedQuotation = Math.round(exchangingQuotation * 100) / 100;
-                const currentCurrency = exchangeRates[currency].name.split('/')[0];
-                const CONVERT_TO = 'Real';
-                const convertedValue = (value * exchangingQuotation).toString();
-                const separatorIndex = [...convertedValue].indexOf('.');
-                const THREE = 3;
-                const roundedValue = convertedValue.slice(0, separatorIndex + THREE);
-                return (
-                  <tr key={ expense.id }>
-                    <td>{description}</td>
-                    <td>{tag}</td>
-                    <td>{method}</td>
-                    <td>{formattedValue}</td>
-                    <td>{currentCurrency}</td>
-                    <td>{formattedQuotation}</td>
-                    <td>{roundedValue}</td>
-                    <td>{CONVERT_TO}</td>
-                    <td>x</td>
-                  </tr>);
-              })}
             </tbody>
           </table>
 
@@ -211,11 +190,13 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   dispatchExpensesData: (state) => dispatch(walletAction(state)),
+  deleteExpense: (idToDelete) => dispatch(deleteExpenseAction(idToDelete)),
 });
 
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
   dispatchExpensesData: PropTypes.func.isRequired,
+  deleteExpense: PropTypes.func.isRequired,
   expenses: PropTypes.arrayOf(
     PropTypes.object.isRequired,
   ).isRequired,
