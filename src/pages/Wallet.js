@@ -47,8 +47,19 @@ class Wallet extends React.Component {
       });
     }
 
+    calculateTotalExpenses = () => {
+      const { expenses } = this.props;
+      const totalExpense = expenses.reduce((acc, curr) => {
+        const valueToFloat = parseFloat(curr.value);
+        const exchangingQuotation = parseFloat(curr.exchangeRates[curr.currency].ask);
+        acc += (valueToFloat * exchangingQuotation);
+        return acc;
+      }, 0);
+      return totalExpense;
+    }
+
     render() {
-      const { email, expenses } = this.props;
+      const { email } = this.props;
       const { value, description, currencyList } = this.state;
       return (
         <>
@@ -58,8 +69,8 @@ class Wallet extends React.Component {
               {email}
             </span>
             <span data-testid="total-field">
-              Despesas totais:
-              {expenses.reduce((acc, curr) => acc += (parseFloat(curr.value) * parseFloat(curr.exchangeRates[curr.currency].ask)), 0)}
+              {`Despesas totais:
+              ${this.calculateTotalExpenses()}`}
             </span>
             <span data-testid="header-currency-field">
               Cambio:BRL
