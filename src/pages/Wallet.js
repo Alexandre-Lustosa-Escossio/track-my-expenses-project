@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { deleteExpenseAction, walletAction } from '../actions';
 import apiFetcher from '../helpers/apiFetcher';
+import ExpensesList from '../Components/ExpensesList';
 
 class Wallet extends React.Component {
     state = {
@@ -44,11 +45,6 @@ class Wallet extends React.Component {
         value: '',
         description: '',
       });
-    }
-
-    handleDeleteExpenseBtn = (idToDelete) => {
-      const { deleteExpense } = this.props;
-      deleteExpense(idToDelete);
     }
 
     render() {
@@ -175,6 +171,7 @@ class Wallet extends React.Component {
                   Editar/Excluir
                 </th>
               </tr>
+              <ExpensesList />
             </tbody>
           </table>
 
@@ -196,7 +193,6 @@ const mapDispatchToProps = (dispatch) => ({
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
   dispatchExpensesData: PropTypes.func.isRequired,
-  deleteExpense: PropTypes.func.isRequired,
   expenses: PropTypes.arrayOf(
     PropTypes.object.isRequired,
   ).isRequired,
