@@ -29,12 +29,12 @@ class Wallet extends React.Component {
       });
     }
 
-      handleInputChange = (event) => {
-        const { target: { value, name } } = event;
-        this.setState({
-          [name]: value,
-        });
-      }
+    handleInputChange = (event) => {
+      const { target: { value, name } } = event;
+      this.setState({
+        [name]: value,
+      });
+    }
 
     handleBtnClick = () => {
       const { dispatchExpensesData } = this.props;
@@ -59,7 +59,7 @@ class Wallet extends React.Component {
     }
 
     render() {
-      const { email } = this.props;
+      const { email, editModeOn } = this.props;
       const { value, description, currencyList } = this.state;
       return (
         <>
@@ -144,12 +144,21 @@ class Wallet extends React.Component {
                 onChange={ (event) => this.handleInputChange(event) }
               />
             </label>
-            <button
-              type="button"
-              onClick={ this.handleBtnClick }
-            >
-              Adicionar Despesa
-            </button>
+            {editModeOn
+              ? (
+                <button
+                  type="button"
+                  onClick={ this.handleBtnClick }
+                >
+                  Editar Despesa
+                </button>)
+              : (
+                <button
+                  type="button"
+                  onClick={ this.handleBtnClick }
+                >
+                  Adicionar Despesa
+                </button>)}
           </form>
           <table>
             <tbody>
@@ -194,6 +203,8 @@ class Wallet extends React.Component {
 const mapStateToProps = (state) => ({
   email: state.user.email,
   expenses: state.wallet.expenses,
+  editModeOn: state.wallet.editModeOn,
+  idToEdit: state.wallet.editingId,
 });
 
 const mapDispatchToProps = (dispatch) => ({

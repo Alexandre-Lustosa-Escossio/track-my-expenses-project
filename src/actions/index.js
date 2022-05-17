@@ -25,3 +25,8 @@ export const deleteExpenseAction = (idToDelete) => ({
   type: 'deleteExpense',
   idToDelete,
 });
+
+export const activateEditMode = (idToEdit) => ({
+  type: 'editModeOn',
+  idToEdit,
+});
