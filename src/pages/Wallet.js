@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { deleteExpenseAction, walletAction } from '../actions';
+import { deleteExpenseAction, walletAction, deactivateEditMode, editExpenseAction } from '../actions';
 import apiFetcher from '../helpers/apiFetcher';
 import ExpensesList from '../Components/ExpensesList';
 
@@ -36,7 +36,7 @@ class Wallet extends React.Component {
       });
     }
 
-    handleBtnClick = () => {
+    handleAddExpenseBtnClick = () => {
       const { dispatchExpensesData } = this.props;
       const sharedState = { ...this.state };
       delete sharedState.currencyList;
@@ -46,6 +46,16 @@ class Wallet extends React.Component {
         description: '',
       });
     }
+
+  handleEditExpenseBtnClick = () => {
+    const { dispatchEditedExpenses, idToEdit } = this.props;
+    const sharedState = { ...this.state, id: idToEdit };
+    dispatchEditedExpenses(sharedState);
+    this.setState({
+      value: '',
+      description: '',
+    });
+  }
 
     calculateTotalExpenses = () => {
       const { expenses } = this.props;
@@ -148,14 +158,14 @@ class Wallet extends React.Component {
               ? (
                 <button
                   type="button"
-                  onClick={ this.handleBtnClick }
+                  onClick={ this.handleEditExpenseBtnClick }
                 >
                   Editar Despesa
                 </button>)
               : (
                 <button
                   type="button"
-                  onClick={ this.handleBtnClick }
+                  onClick={ this.handleAddExpenseBtnClick }
                 >
                   Adicionar Despesa
                 </button>)}
@@ -210,6 +220,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   dispatchExpensesData: (state) => dispatch(walletAction(state)),
   deleteExpense: (idToDelete) => dispatch(deleteExpenseAction(idToDelete)),
+  setEditModeOff: () => dispatch(deactivateEditMode()),
+  dispatchEditedExpenses: (state) => dispatch(editExpenseAction(state)),
 });
 
 Wallet.propTypes = {

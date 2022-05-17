@@ -10,8 +10,8 @@ class ExpensesList extends React.Component {
     }
 
   handleEditExpenseBtn = (idToEdit) => {
-    const { setEditMode } = this.props;
-    setEditMode(idToEdit);
+    const { setEditModeOn } = this.props;
+    setEditModeOn(idToEdit);
   }
 
   render() {
@@ -76,7 +76,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   deleteExpense: (idToDelete) => dispatch(deleteExpenseAction(idToDelete)),
-  setEditMode: (idToEdit) => dispatch(activateEditMode(idToEdit)),
+  setEditModeOn: (idToEdit) => dispatch(activateEditMode(idToEdit)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExpensesList);

@@ -32,6 +32,24 @@ const wallet = (state = INITIAL_STATE, action) => {
     });
   }
 
+  case 'editModeOff': {
+    return ({
+      ...state,
+      editModeOn: false,
+      editingId: '',
+    });
+  }
+
+  case 'editExpense': {
+    const { editedExpense } = action;
+    const { id } = editedExpense;
+    const prevExpenses = { ...state }.expenses;
+    const editedExpenses = prevExpenses.map((expense) => (
+      expense.id === id ? ({ ...expense, ...editedExpense }) : expense
+    ));
+    return { expenses: editedExpenses };
+  }
+
   default:
     return state;
   }

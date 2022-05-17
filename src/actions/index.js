@@ -30,3 +30,12 @@ export const activateEditMode = (idToEdit) => ({
   type: 'editModeOn',
   idToEdit,
 });
+
+export const deactivateEditMode = () => ({
+  type: 'editModeOff',
+});
+
+export const editExpenseAction = (state) => ({
+  type: 'editExpense',
+  editedExpense: state,
+});
